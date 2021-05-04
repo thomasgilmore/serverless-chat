@@ -2,13 +2,38 @@
     import {fade} from "svelte/transition"
     import ErrorAlert from "./ErrorAlert.svelte";
 
+    import {auth} from "../services/firebase";
+    import {createEventDispatcher} from "svelte";
+
+    const d = createEventDispatcher();
+
     export let authMode: "login" | "register" = "register";
     let isAuthenticated = false;
     let err: string | null = null;
 
     function login() {}
 
-    function register() {}
+    function register() {
+        const email = (document.getElementById("r-email") as HTMLInputElement).value
+        const password = (document.getElementById("r-password") as HTMLInputElement).value
+        const cpassword = (document.getElementById("r-cpassword") as HTMLInputElement).value
+
+        // form validation
+        if (!email || !password || !cpassword) {
+            err = "Fill out all fields!"
+            return;
+        }
+        if (password !== cpassword) {
+            err = "Passwords don't match!"
+            return;
+        }
+        err = "";
+
+        // creating the user
+        auth.createUserWithEmailAndPassword(email, password).then(() => {d("done"); d("auth")}).catch(e => {
+            err = `(${e.code}) ${e.message}`
+        })
+    }
 
     function logout() {}
 
