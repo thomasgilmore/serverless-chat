@@ -50,7 +50,13 @@
         })
     }
 
-    function logout() {}
+    function logout() {
+        if (auth.currentUser) {
+            auth.signOut().then(() => {d("done"); d("logout")}).catch(e => {
+                throw new Error(e)
+            });
+        }
+    }
 
     function google() {
         auth.signInWithPopup(googleAuth).then(() => {
