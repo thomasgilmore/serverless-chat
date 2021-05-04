@@ -11,7 +11,22 @@
     let isAuthenticated = false;
     let err: string | null = null;
 
-    function login() {}
+    function login() {
+        const email = (document.getElementById("l-email") as HTMLInputElement).value
+        const password = (document.getElementById("l-password") as HTMLInputElement).value
+
+        // basic form validation
+        if (!email || !password) {
+            err = "Fill out all fields!"
+            return;
+        }
+        err = "";
+
+        // sign in using firebase
+        auth.signInWithEmailAndPassword(email, password).then(() => {d("done"); d("auth")}).catch(e => {
+            err = `(${e.code}) ${e.message}`
+        })
+    }
 
     function register() {
         const email = (document.getElementById("r-email") as HTMLInputElement).value
