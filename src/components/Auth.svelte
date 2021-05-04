@@ -52,7 +52,14 @@
 
     function logout() {}
 
-    function google() {}
+    function google() {
+        auth.signInWithPopup(googleAuth).then(() => {
+            d("auth");
+            d("done");
+        }).catch(e => {
+            err = `(${e.code}) ${e.message}`
+        })
+    }
 </script>
 
 
