@@ -66,6 +66,11 @@
             err = `(${e.code}) ${e.message}`
         })
     }
+
+    auth.onAuthStateChanged(user => {
+        isAuthenticated = !!user;
+        if (user) d("auth")
+    })
 </script>
 
 
