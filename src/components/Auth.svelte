@@ -1,39 +1,46 @@
+<!--
+@component
+
+This component is a login/register form for firebase.
+Supports google signin too
+-->
+
 <script lang="ts">
+    import {auth, googleAuth} from "../services/firebase";
     import {fade} from "svelte/transition"
     import ErrorAlert from "./ErrorAlert.svelte";
-
-    import {auth} from "../services/firebase";
     import {createEventDispatcher} from "svelte";
-
-    const d = createEventDispatcher();
 
     export let authMode: "login" | "register" = "register";
     let isAuthenticated = false;
     let err: string | null = null;
+    const d = createEventDispatcher();
+
+    auth.onAuthStateChanged(user => {
+        isAuthenticated = !!user;
+        if (user) d("auth")
+    })
 
     function login() {
         const email = (document.getElementById("l-email") as HTMLInputElement).value
         const password = (document.getElementById("l-password") as HTMLInputElement).value
 
-        // basic form validation
         if (!email || !password) {
             err = "Fill out all fields!"
             return;
         }
         err = "";
 
-        // sign in using firebase
         auth.signInWithEmailAndPassword(email, password).then(() => {d("done"); d("auth")}).catch(e => {
             err = `(${e.code}) ${e.message}`
         })
     }
-
+    
     function register() {
         const email = (document.getElementById("r-email") as HTMLInputElement).value
         const password = (document.getElementById("r-password") as HTMLInputElement).value
         const cpassword = (document.getElementById("r-cpassword") as HTMLInputElement).value
 
-        // form validation
         if (!email || !password || !cpassword) {
             err = "Fill out all fields!"
             return;
@@ -44,18 +51,9 @@
         }
         err = "";
 
-        // creating the user
         auth.createUserWithEmailAndPassword(email, password).then(() => {d("done"); d("auth")}).catch(e => {
             err = `(${e.code}) ${e.message}`
         })
-    }
-
-    function logout() {
-        if (auth.currentUser) {
-            auth.signOut().then(() => {d("done"); d("logout")}).catch(e => {
-                throw new Error(e)
-            });
-        }
     }
 
     function google() {
@@ -67,12 +65,14 @@
         })
     }
 
-    auth.onAuthStateChanged(user => {
-        isAuthenticated = !!user;
-        if (user) d("auth")
-    })
+    function logout() {
+        if (auth.currentUser) {
+            auth.signOut().then(() => {d("done"); d("logout")}).catch(e => {
+                throw new Error(e)
+            });
+        }
+    }
 </script>
-
 
 <div class="w3-card-4" style="width: 40%; margin: 1rem auto">
     {#if !isAuthenticated}

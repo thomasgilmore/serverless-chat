@@ -6,7 +6,6 @@
     export let email: string;
     export let message: string;
     export let uid: string;
-    // if the message was made by the current user
     export let self = false;
 </script>
 

@@ -4,3 +4,7 @@
 .DS_Store
 
 /src/firebase_config.ts
+.firebase
+.firebaserc
+firebase.json
+src/firebase-config.ts

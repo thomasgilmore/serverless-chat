@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { auth, db } from "../services/firebase";
+    import {auth, db} from "../services/firebase"
     import router from "page";
     import { onDestroy } from "svelte";
     import Chat from "../components/Chat.svelte";
@@ -53,7 +53,7 @@
         })
     }
 
-    onDestroy(unsubscribe);
+    onDestroy(unsubscribe)
 
     function logout() {
         if (auth.currentUser) {
@@ -62,7 +62,6 @@
             });
         }
     }
-
 </script>
 
 {#if typeof user === "undefined"}
